@@ -1,0 +1,114 @@
+﻿@model Tuluc_Dragos_Proiect.Models.LibraryViewModels.DistribuitorIndexData
+
+@{
+    ViewData["Title"] = "Distributors";
+}
+
+<h1>Distribuitors</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Distributor Name</th>
+            <th>Adress</th>
+            <th>Hammock</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Distribuitors)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["DistributorID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.DistributorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adress)
+                </td>
+
+                <td>
+                    @{
+                        foreach (var hammock in item.DistributedHammocks)
+                        {
+                            @hammock.Hammock.ID @: @hammock.Hammock.Nume <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Hammocks != null)
+{
+    <h3>Hammocks Published by Selected Distributor</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Distributor</th>
+            <th>Price</th>
+        </tr>
+        @foreach (var item in Model.Hammocks)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["HammockID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { bookID = item.ID })
+                </td>
+                <td>
+                    @item.Nume
+                </td>
+                <td>
+                    @item.Producator
+                </td>
+                <td>
+                    @item.Pret
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@if (Model.Orders != null)
+{
+    <h3>
+        Customers that have ordered the Selected Hammock
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Order Date</th>
+        </tr>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @item.Customer.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+            </tr>
+        }
+    </table>
+}
